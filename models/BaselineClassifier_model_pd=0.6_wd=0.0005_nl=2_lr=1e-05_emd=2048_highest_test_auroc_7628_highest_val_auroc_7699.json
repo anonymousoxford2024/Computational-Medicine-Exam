@@ -1,0 +1,16 @@
+{
+    "hidden_channels": 64,
+    "n_classes": 1,
+    "n_layers": 2,
+    "binary_cls": true,
+    "upsampling": true,
+    "p_dropout": 0.6,
+    "weight_decay": 0.0005,
+    "lr": 1e-05,
+    "emb_dim": 2048,
+    "performance": {
+        "train_auroc": 0.9999410510063171,
+        "val_auroc": 0.7699364423751831,
+        "test_auroc": 0.7628835439682007
+    }
+}
