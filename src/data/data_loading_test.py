@@ -1,6 +1,7 @@
 from data.data_loading import load_tox21_data_as_graphs, load_tox21_data_as_embeddings
 from torch_geometric.loader import DataLoader as GeomDataLoader
 from torch.utils.data import DataLoader
+import torch
 
 
 def test_load_tox21_data_as_graphs():
@@ -25,4 +26,6 @@ def test_load_tox21_data_as_embeddings():
         assert isinstance(data_loader, DataLoader)
 
         for data in data_loader:
-            assert data.keys().tolist() == ["x", "y"]
+            assert list(data.keys()) == ["x", "y"]
+            assert isinstance(data['x'], torch.Tensor)
+            assert data['x'].size()[-1] == emb_dim
