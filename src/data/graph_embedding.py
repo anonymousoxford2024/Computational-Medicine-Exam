@@ -1,12 +1,7 @@
-from pathlib import Path
-
 import torch
 from rdkit import Chem
 from rdkit.Chem import AllChem
 from torch_geometric.data.data import Data
-from torch_geometric.datasets import MoleculeNet
-
-from utils import set_random_seeds
 
 
 def get_molecular_fingerprint_embedding(graph: Data, emb_dim: int) -> torch.Tensor:
@@ -23,17 +18,3 @@ def get_molecular_fingerprint_embedding(graph: Data, emb_dim: int) -> torch.Tens
     )
 
     return torch.tensor(fingerprint).float()
-
-
-if __name__ == "__main__":
-    set_random_seeds(42)
-
-    data_path = Path(__file__).parent.parent.parent / "data" / "Tox21"
-    dataset = MoleculeNet(root=str(data_path), name="Tox21")[:1]
-    for g in dataset:
-        emb = get_molecular_fingerprint_embedding(g, emb_dim=64)
-        emb_2 = get_molecular_fingerprint_embedding(g, emb_dim=64)
-        print(f"emb = {emb}")
-        for e in emb:
-            print(f"e = {e}")
-        assert torch.allclose(emb, emb_2)

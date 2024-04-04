@@ -15,6 +15,7 @@ def predict(model: torch.nn.Module, loader: DataLoader, task: str = "binary"):
 
     for data in loader:
         with torch.no_grad():
+
             y_pred = model(data)
             predicted_labels = torch.sigmoid(y_pred) if task == "binary" else y_pred
 

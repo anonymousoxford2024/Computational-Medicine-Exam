@@ -4,7 +4,7 @@ from typing import Tuple
 import torch
 from torch.utils.data import Dataset, WeightedRandomSampler, DataLoader
 from torch_geometric.datasets import MoleculeNet
-from torch_geometric.loader import DataLoader as GeoDataLoader, ImbalancedSampler
+from torch_geometric.loader import DataLoader as GeomDataLoader, ImbalancedSampler
 
 from data.data_exploration import set_binary_cardio_toxicity_labels
 from data.graph_embedding import get_molecular_fingerprint_embedding
@@ -33,12 +33,12 @@ def shuffle(self, seed: int = 42):
     return dataset
 
 
-def get_train_val_test_dataloaders(
+def _get_train_val_test_dataloaders(
     ds: MoleculeNet,
     split: tuple = (0.7, 0.1, 0.2),
     batch_size: int = 32,
     upsampling: bool = False,
-) -> Tuple[GeoDataLoader, GeoDataLoader, GeoDataLoader]:
+) -> Tuple[GeomDataLoader, GeomDataLoader, GeomDataLoader]:
     """
     Splits the dataset into training, validation, and test sets and returns their corresponding
     PyTorch Geometric dataloaders.
@@ -67,19 +67,19 @@ def get_train_val_test_dataloaders(
     if upsampling:
         train_ds.y = train_ds.y.long()
         sampler = ImbalancedSampler(train_ds)
-        train_dl = GeoDataLoader(train_ds, batch_size=batch_size, sampler=sampler)
+        train_dl = GeomDataLoader(train_ds, batch_size=batch_size, sampler=sampler)
     else:
-        train_dl = GeoDataLoader(train_ds, batch_size=batch_size, shuffle=True)
+        train_dl = GeomDataLoader(train_ds, batch_size=batch_size, shuffle=True)
 
-    val_dl = GeoDataLoader(val_ds, batch_size=batch_size, shuffle=False)
-    test_dl = GeoDataLoader(test_ds, batch_size=batch_size, shuffle=False)
+    val_dl = GeomDataLoader(val_ds, batch_size=batch_size, shuffle=False)
+    test_dl = GeomDataLoader(test_ds, batch_size=batch_size, shuffle=False)
 
     return train_dl, val_dl, test_dl
 
 
 def load_tox21_data_as_graphs(
     binary_cls: bool, upsampling: bool, batch_size: int = 32
-) -> Tuple[GeoDataLoader, GeoDataLoader, GeoDataLoader]:
+) -> Tuple[GeomDataLoader, GeomDataLoader, GeomDataLoader]:
     """
     Loads the Tox21 dataset as graph data and prepares PyTorch Geometric dataloaders for
     training, validation, and testing.
@@ -92,7 +92,7 @@ def load_tox21_data_as_graphs(
     if binary_cls:
         set_binary_cardio_toxicity_labels(dataset)
 
-    train_loader, val_loader, test_loader = get_train_val_test_dataloaders(
+    train_loader, val_loader, test_loader = _get_train_val_test_dataloaders(
         ds=dataset, batch_size=batch_size, upsampling=upsampling, split=(0.7, 0.1, 0.2)
     )
     return train_loader, val_loader, test_loader
@@ -100,7 +100,7 @@ def load_tox21_data_as_graphs(
 
 def load_tox21_data_as_embeddings(
     binary_cls: bool, upsampling: bool, emb_dim: int, batch_size: int = 32
-) -> Tuple[GeoDataLoader, GeoDataLoader, GeoDataLoader]:
+) -> Tuple[GeomDataLoader, GeomDataLoader, GeomDataLoader]:
     """
     Converts the Tox21 dataset from graph representations to molecular fingerprint embeddings and
     prepares dataloaders.
