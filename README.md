@@ -1,4 +1,4 @@
-# Transforming Drug Development: Exploring the Power of Graph Representations in Predicting Cardiotoxicity
+# Enhancing Drug Development: Exploring the Power of Graph Representation Learning in Cardiotoxicity Prediction
 
 This project delves into the realm of graph representation learning to predict the cardiotoxicity of molecules. It investigates the efficacy of Graph Neural Networks (GNNs) against traditional non-graph Neural Networks (NNs) using the Tox21 toxicity dataset.
 
